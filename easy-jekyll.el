@@ -1873,9 +1873,9 @@ Optional prefix ARG says how many lines to move; default is one line."
      (insert (propertize (concat "\n")'face 'easy-jekyll-help-face)))
    (unless easy-jekyll--refresh
      (setq easy-jekyll--cursor (point)))
-   (let ((files (directory-files (expand-file-name
+   (let ((files (directory-files-recursively (expand-file-name
 				  easy-jekyll-postdir
-				  easy-jekyll-basedir)))
+				  easy-jekyll-basedir) "" nil))
 	 (lists (list)))
      (if (eq 2 (length files))
 	 (progn
@@ -1892,12 +1892,13 @@ Optional prefix ARG says how many lines to move; default is one line."
 		       (string= (car files) "..")
 		       (not (member (file-name-extension (car files)) easy-jekyll--formats)))
 	     (push
+  	      (replace-regexp-in-string (concat (expand-file-name easy-jekyll-postdir easy-jekyll-basedir) "/") ""
 	      (concat
 	       (format-time-string "%Y-%m-%d %H:%M:%S " (nth 5 (file-attributes
 								(expand-file-name
 								 (car files)
 								 easy-jekyll-postdir))))
-	       (car files))
+	       (car files)))
 	      lists))
 	   (pop files))
 	 (cond ((eq 1 easy-jekyll--sort-time-flg)
